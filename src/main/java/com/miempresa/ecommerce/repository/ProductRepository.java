@@ -42,17 +42,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findByCategoryAndActiveTrue(String category, Pageable pageable);
 
     /**
-     * Buscar productos por nombre que contenga palabras clave
-     * @param keyword Search keyword
-     * @param pageable Informacion de Paginacion
-     * @return Page de productos compatibles 
-     */
-    @Query("SELECT p FROM Product p WHERE p.active = true AND " +
-           "(LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-           "LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%')))")
-    Page<Product> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
-
-    /**
      * Encuentra productos con bajo stock
      * @param threshold Stock threshold
      * @return List de productos con bajo stock

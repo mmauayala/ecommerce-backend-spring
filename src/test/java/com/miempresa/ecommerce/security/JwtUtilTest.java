@@ -35,7 +35,7 @@ class JwtUtilTest {
     @BeforeEach
     void setUp() {
         // Configurar propiedades de prueba
-        ReflectionTestUtils.setField(jwtUtil, "jwtSecret", "test-secret-key-for-jwt-token-generation-minimum-256-bits-required");
+        ReflectionTestUtils.setField(jwtUtil, "jwtSecret", "test-secret-key-for-jwt-token-generation-minimum-256-bits-required-for-jwt-token-generation-minimum-256-bits-required-for-testing-purposes-only");
         ReflectionTestUtils.setField(jwtUtil, "jwtExpirationMs", 86400000); // 24 horas
         ReflectionTestUtils.setField(jwtUtil, "jwtIssuer", "ecommerce-test");
 
