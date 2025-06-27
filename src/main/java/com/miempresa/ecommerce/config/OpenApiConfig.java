@@ -13,8 +13,6 @@ import io.swagger.v3.oas.annotations.servers.Server;
 /**
  * Configuración de OpenAPI/Swagger para documentación de la API
  * 
- * @author Development Team
- * @version 1.0.0
  */
 @Configuration
 @OpenAPIDefinition(

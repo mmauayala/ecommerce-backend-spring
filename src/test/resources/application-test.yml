@@ -17,8 +17,7 @@ spring:
       enabled: false
 
 jwt:
-  secret: >-
-    test-secret-key-for-jwt-token-generation-minimum-256-bits-required-for-jwt-token-generation-minimum-256-bits-required-for-testing-purposes-only
+  secret: jwt.secret=mySuperSecretKeyWithAtLeast32Characters123456
   expiration: 86400000
   issuer: ecommerce-test
 
