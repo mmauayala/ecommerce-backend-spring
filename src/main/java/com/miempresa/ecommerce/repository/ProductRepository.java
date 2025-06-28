@@ -55,4 +55,39 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      * @return true si existe, falso en caso contrario
      */
     boolean existsBySku(String sku);
+    
+    
+    /**
+     * Encontrar productos con stock bajo usando ProductStock
+     * @return Lista de productos con stock bajo
+     */
+    @Query("SELECT DISTINCT p FROM Product p JOIN ProductStock ps ON p.id = ps.product.id WHERE ps.quantity <= ps.minStock AND p.active = true")
+    List<Product> findProductsWithLowStock();
+
+    /**
+     * Buscar productos por nombre o descripción
+     * @param keyword Palabra clave
+     * @param pageable Información de paginación
+     * @return Page de productos que coinciden
+     */
+    @Query("SELECT p FROM Product p WHERE p.active = true AND (LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+    Page<Product> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+    /**
+     * Encontrar productos por categoría
+     * @param categoryId ID de la categoría
+     * @param pageable Información de paginación
+     * @return Page de productos en la categoría
+     */
+    @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId AND p.active = true")
+    Page<Product> findByCategoryId(@Param("categoryId") Long categoryId, Pageable pageable);
+
+    /**
+     * Encontrar productos activos con stock disponible
+     * @param pageable Información de paginación
+     * @return Page de productos con stock
+     */
+    @Query("SELECT DISTINCT p FROM Product p JOIN ProductStock ps ON p.id = ps.product.id WHERE p.active = true AND ps.quantity > 0")
+    Page<Product> findActiveProductsWithStock(Pageable pageable);
+
 }
