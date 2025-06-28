@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.miempresa.ecommerce.dto.request.ProductRequestDTO;
+import com.miempresa.ecommerce.dto.request.ProductCreateRequestDTO;
+import com.miempresa.ecommerce.dto.request.ProductUpdateRequestDTO;
 import com.miempresa.ecommerce.dto.response.ProductResponseDTO;
 import com.miempresa.ecommerce.service.IProductService;
 
@@ -68,7 +69,7 @@ public class ProductController {
     })
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductRequestDTO productRequest) {
+    public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductCreateRequestDTO productRequest) {
         logger.info("Solicitud REST para crear un producto: {}", productRequest.getName());
         
         // TODO: Implementar el punto final de creación del producto 
@@ -178,7 +179,7 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponseDTO> updateProduct(
             @PathVariable Long id,
-            @Valid @RequestBody ProductRequestDTO productRequest) {
+            @Valid @RequestBody ProductUpdateRequestDTO productRequest) {
         
         logger.info("Solicitud REST para actualizar el producto con ID: {}", id);
         
