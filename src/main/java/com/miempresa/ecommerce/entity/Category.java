@@ -96,4 +96,20 @@ public class Category {
                 .replaceAll("^-|-$", "");
     }
 
+    /**
+     * Verificar si es categoría raíz
+     * @return true si no tiene padre
+     */
+    public Boolean isRoot() {
+        return parent == null;
+    }
+
+    /**
+     * Verificar si tiene subcategorías
+     * @return true si tiene hijos
+     */
+    public Boolean hasChildren() {
+        return children != null && !children.isEmpty();
+    }
+    
 }

@@ -5,7 +5,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.miempresa.ecommerce.dto.request.ProductRequestDTO;
+import com.miempresa.ecommerce.dto.request.ProductCreateRequestDTO;
+import com.miempresa.ecommerce.dto.request.ProductUpdateRequestDTO;
 import com.miempresa.ecommerce.dto.response.ProductResponseDTO;
 
 /**
@@ -19,7 +20,7 @@ public interface IProductService {
      * @param productRequest Solicitud de creación de producto
      * @return Respuesta de creación de producto
      */
-    ProductResponseDTO createProduct(ProductRequestDTO productRequest);
+    ProductResponseDTO createProduct(ProductCreateRequestDTO productRequest);
 
     /**
      * Obtener producto por ID
@@ -64,7 +65,7 @@ public interface IProductService {
      * @param productRequest Solicitud de actualización del producto
      * @return Respuesta de actualización del producto
      */
-    ProductResponseDTO updateProduct(Long id, ProductRequestDTO productRequest);
+    ProductResponseDTO updateProduct(Long id, ProductUpdateRequestDTO productRequest);
 
     /**
      * Eliminar producto (eliminación temporal)

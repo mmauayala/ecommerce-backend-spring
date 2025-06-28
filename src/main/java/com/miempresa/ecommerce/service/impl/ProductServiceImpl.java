@@ -10,7 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.miempresa.ecommerce.dto.request.ProductRequestDTO;
+import com.miempresa.ecommerce.dto.request.ProductCreateRequestDTO;
+import com.miempresa.ecommerce.dto.request.ProductUpdateRequestDTO;
 import com.miempresa.ecommerce.dto.response.ProductResponseDTO;
 import com.miempresa.ecommerce.exception.BusinessException;
 import com.miempresa.ecommerce.repository.ProductRepository;
@@ -30,7 +31,7 @@ public class ProductServiceImpl implements IProductService {
     private ProductRepository productRepository;
 
     @Override
-    public ProductResponseDTO createProduct(ProductRequestDTO productRequest) {
+    public ProductResponseDTO createProduct(ProductCreateRequestDTO productRequest) {
         logger.info("Creando un nuevo producto con nombre: {}", productRequest.getName());
         
         // Validar la unicidad del SKU si se proporciona
@@ -103,7 +104,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public ProductResponseDTO updateProduct(Long id, ProductRequestDTO productRequest) {
+    public ProductResponseDTO updateProduct(Long id, ProductUpdateRequestDTO productRequest) {
         logger.info("Actualizar producto con ID: {}", id);
         
         // TODO: Implementar la lógica de actualización del producto

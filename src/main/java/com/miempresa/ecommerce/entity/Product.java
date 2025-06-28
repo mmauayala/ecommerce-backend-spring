@@ -1,13 +1,19 @@
 package com.miempresa.ecommerce.entity;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -36,8 +42,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Product name is required")
-    @Size(max = 255, message = "Product name must not exceed 255 characters")
+    @NotBlank(message = "Se requiere nombre de producto")
+    @Size(max = 255, message = "El nombre del producto no debe exceder los 255 caracteres")
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -45,20 +51,27 @@ public class Product {
     @Column(name = "description", length = 1000)
     private String description;
 
-    @NotNull(message = "Price is required")
+    @NotNull(message = "Se requiere precio")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    private Double price;
 
-    @NotNull(message = "Stock quantity is required")
+    @NotNull(message = "Se requiere cantidad de stock")
     @Column(name = "stock_quantity", nullable = false)
     private Integer stockQuantity;
 
     @Column(name = "sku", unique = true, length = 100)
     private String sku;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductStock> productStocks = new ArrayList<>();
+
     @Column(name = "category")
-    private String category;
+    private String categoryString;
 
     @Column(name = "image_url")
     private String imageUrl;
