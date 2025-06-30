@@ -53,7 +53,7 @@ public class Product {
 
     @NotNull(message = "Se requiere precio")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
-    @Column(name = "price", nullable = false, precision = 10, scale = 2)
+    @Column(name = "price", nullable = false)
     private Double price;
 
     @NotNull(message = "Se requiere cantidad de stock")

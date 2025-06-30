@@ -6,6 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -59,6 +63,7 @@ public class ProductController {
     description = "Crea un nuevo producto en el sistema (requiere rol ADMIN)",
     security = @SecurityRequirement(name = "Bearer Authentication")
     )
+
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Producto creado exitosamente",
             content = @Content(mediaType = "application/json", 
@@ -67,18 +72,18 @@ public class ProductController {
         @ApiResponse(responseCode = "401", description = "No autorizado"),
         @ApiResponse(responseCode = "403", description = "Acceso denegado - requiere rol ADMIN")
     })
+
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductCreateRequestDTO productRequest) {
         logger.info("Solicitud REST para crear un producto: {}", productRequest.getName());
         
-        // TODO: Implementar el punto final de creación del producto 
-        // ProductResponseDTO response = productService.createProduct(productRequest); 
-        // return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        ProductResponseDTO response = productService.createProduct(productRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
         
-        throw new UnsupportedOperationException("Endpoint not implemented yet");
+        //throw new UnsupportedOperationException("Punto final aún no implementado");
     }
-
+    
     /**
      * Obtener producto por ID
      * @param id Product ID
@@ -86,11 +91,12 @@ public class ProductController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable Long id) {
-        logger.info("REST request to get product by ID: {}", id);
+        logger.info("Solicitud REST para obtener el producto por ID: {}", id);
         
-        // TODO: Implementar el punto final de obtención de producto por ID
+        ProductResponseDTO response = productService.getProductById(id);
+        return ResponseEntity.ok(response);
         
-        throw new UnsupportedOperationException("Endpoint not implemented yet");
+        //throw new UnsupportedOperationException("Punto final aún no implementado");
     }
 
     /**
@@ -100,11 +106,12 @@ public class ProductController {
      */
     @GetMapping("/sku/{sku}")
     public ResponseEntity<ProductResponseDTO> getProductBySku(@PathVariable String sku) {
-        logger.info("REST request to get product by SKU: {}", sku);
+        logger.info("Solicitud REST para obtener el producto por SKU: {}", sku);
         
-        // TODO: Implementar la obtención de producto por punto final de SKU
+        ProductResponseDTO response = productService.getProductBySku(sku);
+        return ResponseEntity.ok(response);
         
-        throw new UnsupportedOperationException("Endpoint not implemented yet");
+        //throw new UnsupportedOperationException("Punto final aún no implementado");
     }
 
     /**
@@ -122,11 +129,16 @@ public class ProductController {
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDir) {
         
-        logger.info("Solicitud REST para obtener todos los productos activos - page: {}, size: {}", page, size);
+        logger.info("Solicitud REST para obtener todos los productos activos - página: {}, tamaño: {}", page, size);
+
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<ProductResponseDTO> products = productService.getAllActiveProducts(pageable);
+        return ResponseEntity.ok(products);
         
-        // TODO: Implementar el punto final para obtener todos los productos activos
-        
-        throw new UnsupportedOperationException("Punto final aún no implementado");
+        // throw new UnsupportedOperationException("Punto final aún no implementado");
     }
 
     /**
@@ -141,11 +153,13 @@ public class ProductController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         
-        logger.info("REST request to get products by category: {}", category);
+        logger.info("Solicitud REST para obtener productos por categoría: {}", category);
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductResponseDTO> products = productService.getProductsByCategory(category, pageable);
+        return ResponseEntity.ok(products);
         
-        // TODO: Implement get products by category endpoint
-        
-        throw new UnsupportedOperationException("Endpoint aún no implementado");
+        //throw new UnsupportedOperationException("Endpoint aún no implementado");
     }
 
     /**
@@ -163,10 +177,12 @@ public class ProductController {
             @RequestParam(defaultValue = "20") int size) {
         
         logger.info("Solicitud REST para buscar productos con palabra clave: {}", keyword);
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductResponseDTO> products = productService.searchProducts(keyword, pageable);
+        return ResponseEntity.ok(products);
         
-        // TODO: Implementar el punto final de productos de búsqueda
-        
-        throw new UnsupportedOperationException("Endpoint aún no implementado");
+        //throw new UnsupportedOperationException("Endpoint aún no implementado");
     }
 
     /**
@@ -182,10 +198,11 @@ public class ProductController {
             @Valid @RequestBody ProductUpdateRequestDTO productRequest) {
         
         logger.info("Solicitud REST para actualizar el producto con ID: {}", id);
+
+        ProductResponseDTO response = productService.updateProduct(id, productRequest);
+        return ResponseEntity.ok(response);
         
-        // TODO: Implementar el punto final de actualización del producto
-        
-        throw new UnsupportedOperationException("Endpoint aún no implementado");
+        //throw new UnsupportedOperationException("Endpoint aún no implementado");
     }
 
     /**
@@ -197,15 +214,16 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         logger.info("Solicitud REST para eliminar producto con ID: {}", id);
+
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
         
-        // TODO: Implementar la eliminación del punto final del producto
-        
-        throw new UnsupportedOperationException("Endpoint aún no implementado");
+        //throw new UnsupportedOperationException("Endpoint aún no implementado");
     }
 
     /**
      * Obtener productos con poco stock 
-     * @param umbral Umbral de stock (predeterminado: 10) 
+     * @param threshold Umbral de stock (predeterminado: 10) 
      * @return Lista de productos con poco stock 
      */
 
@@ -215,10 +233,11 @@ public class ProductController {
             @RequestParam(defaultValue = "10") Integer threshold) {
         
         logger.info("Solicitud REST para obtener productos con bajo stock con threshold: {}", threshold);
+
+        List<ProductResponseDTO> products = productService.getLowStockProducts(threshold);
+        return ResponseEntity.ok(products);
         
-        // TODO: Implementar el punto final para obtener productos con bajo stock
-        
-        throw new UnsupportedOperationException("Endpoint aún no implementado");
+        //throw new UnsupportedOperationException("Endpoint aún no implementado");
     }
 
     /**
@@ -235,10 +254,10 @@ public class ProductController {
             @RequestParam Integer quantity) {
         
         logger.info("Solicitud REST para actualizar el stock del ID del producto: {} a la cantidad: {}", id, quantity);
-        
-        // TODO: Implementar el punto final de actualización de stock
 
+        ProductResponseDTO response = productService.updateStock(id, quantity);
+        return ResponseEntity.ok(response);
         
-        throw new UnsupportedOperationException("Endpoint aún no implementado");
+        //throw new UnsupportedOperationException("Endpoint aún no implementado");
     }
 }
